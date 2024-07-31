@@ -6,7 +6,7 @@ $localFilePath = ""
 
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "TeamViewer Installer"
-$form.Size = New-Object System.Drawing.Size(600, 500) # Ajustar el tamaño para acomodar el nuevo campo
+$form.Size = New-Object System.Drawing.Size(600, 550) # Ajustar el tamaño para acomodar el nuevo campo
 $form.StartPosition = "CenterScreen"
 $form.BackColor = [System.Drawing.Color]::White
 $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
@@ -94,6 +94,37 @@ $customConfigIDBox.Size = New-Object System.Drawing.Size(200, 20)
 $customConfigIDBox.Location = New-Object System.Drawing.Point(150, 300)
 $form.Controls.Add($customConfigIDBox)
 
+# Campo para el alias del dispositivo
+$deviceAliasLabel = New-Object System.Windows.Forms.Label
+$deviceAliasLabel.Text = "Device Alias:"
+$deviceAliasLabel.AutoSize = $true
+$deviceAliasLabel.Location = New-Object System.Drawing.Point(50, 340)
+$form.Controls.Add($deviceAliasLabel)
+
+$deviceAliasBox = New-Object System.Windows.Forms.TextBox
+$deviceAliasBox.Size = New-Object System.Drawing.Size(200, 20)
+$deviceAliasBox.Location = New-Object System.Drawing.Point(150, 340)
+$form.Controls.Add($deviceAliasBox)
+
+# Checkbox para habilitar el plugin de Outlook
+$outlookPluginCheckbox = New-Object System.Windows.Forms.CheckBox
+$outlookPluginCheckbox.Text = "Enable Outlook Plugin"
+$outlookPluginCheckbox.AutoSize = $true
+$outlookPluginCheckbox.Location = New-Object System.Drawing.Point(50, 370)
+$form.Controls.Add($outlookPluginCheckbox)
+
+# Botón para seleccionar el archivo de configuración
+$selectConfigButton = New-Object System.Windows.Forms.Button
+$selectConfigButton.Text = "Select Configuration File"
+$selectConfigButton.BackColor = [System.Drawing.Color]::FromArgb(0, 122, 204)
+$selectConfigButton.ForeColor = [System.Drawing.Color]::White
+$selectConfigButton.FlatStyle = "Flat"
+$selectConfigButton.Size = New-Object System.Drawing.Size(250, 40)
+$selectConfigButton.Location = New-Object System.Drawing.Point(50, 400)
+$form.Controls.Add($selectConfigButton)
+
+$configFilePath = ""
+
 function Show-InputBox {
     param (
         [string]$title,
@@ -146,10 +177,25 @@ function Install-TeamViewer {
     )
 
     $customConfigID = $customConfigIDBox.Text
+    $deviceAlias = $deviceAliasBox.Text
+    $enableOutlookPlugin = $outlookPluginCheckbox.Checked
     $additionalArgs = ""
+
     if (![string]::IsNullOrWhiteSpace($customConfigID)) {
-        $additionalArgs = " CUSTOMCONFIGID=$customConfigID"
+        $additionalArgs += " CUSTOMCONFIGID=`"$customConfigID`""
     }
+
+    if ($enableOutlookPlugin) {
+        $additionalArgs += " ENABLEOUTLOOKPLUGIN=true"
+    } else {
+        $additionalArgs += " ENABLEOUTLOOKPLUGIN=false"
+    }
+
+    if (![string]::IsNullOrWhiteSpace($configFilePath)) {
+        $additionalArgs += " SETTINGSFILE=`"$configFilePath`""
+    }
+
+    Write-Output "Arguments: $additionalArgs"
 
     $progressForm = New-Object System.Windows.Forms.Form
     $progressForm.Text = "Download and Install Progress"
@@ -177,9 +223,11 @@ function Install-TeamViewer {
 
     try {
         if ($installerPath -match "\.msi") {
-            Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$installerPath`" /qn ENABLEOUTLOOKPLUGIN=false ADDLOCAL=ALL REMOVE=f.DesktopShortcut$additionalArgs" -Wait
+            # Añadido un doble espacio antes del argumento '/qn' para separar correctamente los argumentos
+            Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$installerPath`" /qn $additionalArgs" -Wait
         } else {
-            Start-Process -FilePath $installerPath -ArgumentList "/S$additionalArgs" -Wait
+            # Añadido un doble espacio antes del argumento '/S' para separar correctamente los argumentos
+            Start-Process -FilePath $installerPath -ArgumentList "/S $additionalArgs" -Wait
         }
 
         $desktopPath = "C:\Users\Public\Desktop\TeamViewer.lnk"
@@ -206,6 +254,8 @@ function Install-TeamViewer {
     }
 }
 
+
+
 function Assign-TeamViewer {
     param (
         [string]$assignmentID
@@ -218,6 +268,7 @@ function Assign-TeamViewer {
             Write-Error "Installation path not found."
             exit 1
         }
+        
         $teamViewerPath = $teamViewerPath.TrimEnd('\')
         $teamViewerExecutable = Join-Path -Path $teamViewerPath -ChildPath "TeamViewer.exe"
         if (-Not (Test-Path -Path $teamViewerExecutable)) {
@@ -225,7 +276,21 @@ function Assign-TeamViewer {
             exit 1
         }
 
-        Start-Process -FilePath $teamViewerExecutable -ArgumentList "assignment --id $assignmentID" -NoNewWindow
+        # Initialize additional arguments
+        $additionalArgs = ""
+
+        # Handle device alias argument
+        $deviceAlias = $deviceAliasBox.Text
+        if (![string]::IsNullOrWhiteSpace($deviceAlias)) {
+            $additionalArgs += " --device-alias=`"$deviceAlias`""
+        }
+
+        # Prepare the argument list
+        $arguments = "assignment --id $assignmentID $additionalArgs"
+
+        # Start the process with additional arguments
+        Start-Process -FilePath $teamViewerExecutable -ArgumentList $arguments -NoNewWindow -Wait
+
         [System.Windows.Forms.MessageBox]::Show("Assignment completed successfully.", "Assignment Complete", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
     } catch {
         [System.Windows.Forms.MessageBox]::Show("An error occurred during assignment: $_", "Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
@@ -318,6 +383,14 @@ $assignmentButton.Add_Click({
         Assign-TeamViewer -assignmentID $assignmentIDBox.Text
     } else {
         [System.Windows.Forms.MessageBox]::Show("Please enter a valid Assignment ID.", "Input Required", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
+    }
+})
+
+$selectConfigButton.Add_Click({
+    $openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+    $openFileDialog.Filter = "TeamViewer Configuration Files (*.tvopt)|*.tvopt"
+    if ($openFileDialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+        $configFilePath = $openFileDialog.FileName
     }
 })
 
