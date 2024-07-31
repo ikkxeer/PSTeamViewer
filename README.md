@@ -1,4 +1,8 @@
-# PSTeamViewer
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/5bc6d6ad-bedf-4405-946d-42e4454354a3" alt="PSCacheCleaner Logo" height="300" width="300">
+</div>
+<h1 align="center">PSTeamViewer</h1>
+PSTeamViewer provides a graphical interface to install, uninstall and configure TeamViewer on Windows. It allows installation from a URL, a local file, and facilitates the assignment of IDs and the creation of shortcuts.
 
 ## Description
 
@@ -28,20 +32,22 @@ This PowerShell script provides a graphical user interface (GUI) to install, uni
 1. **Download the Repository and extract it on a folder**
 
    ```powershell
+   Start-BitsTransfer -source "https://github.com/ikkxeer/PSTeamViewer/archive/refs/heads/main.zip" -Destination "PSTeamViewer.zip"
    ```
 
 3. **Run the Script**
 
- Open PowerShell with administrator privileges and navigate to the cloned repository folder:
+    Open PowerShell with administrator privileges and navigate to the cloned repository folder:
 
- ``powershell
- cd path/to/you/repository
+   ```powershell
+    cd path/to/repository
+   ```
 
 3. run the script with a Powershell Terminal:
 
- ``powershell
- .\TeamViewerInstaller.ps1
- ```
+    ```powershell
+    .\TeamViewerInstaller.ps1
+    ```
 
 ## Interaction with the GUI
 
@@ -68,20 +74,15 @@ This PowerShell script provides a graphical user interface (GUI) to install, uni
 2. Click on the **"Assign"** button.
 3. The script will assign the TeamViewer ID to the current installation.
 
-## Contributions
-
-Contributions are welcome. Please follow these steps to contribute:
-
-1. **Fork the Repository**.
-2. **Create a New Branch** (`git checkout -b feature/nueva-funcionalidad').
-3. **Make your changes** and commit (`git commit -am 'Add new functionality').
-4. **Haz Push to the Branch** (`git push origin feature/nueva-funcionalidad').
-5. **Create a Pull Request** on GitHub.
-
 ## License
 
 This project is licensed under the MIT License. Consult the file [LICENSE](LICENSE) for more details.
 
-## Contact
+## Author
 
-For questions or support, please open an [issue](https://github.com/ikkxeer/PSTeamViewer/issues) in the repository or contact [ikkxeer](https://github.com/ikkxeer).
+This script was authored by ``Ikkxeer``
+
+For any inquiries or issues, please contact @ikkxeer
+
+## Contributing
+Contributions to enhance the script or address issues are welcome. Please open a GitHub issue or submit a pull request.
