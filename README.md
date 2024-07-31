@@ -14,6 +14,9 @@ This PowerShell script provides a graphical user interface (GUI) to install, uni
 - Create a shortcut on the desktop.
 - Assign a TeamViewer ID.
 - Custom Config ID
+- Device Alias
+- Outlook Plugin
+- Configuration File
 
 ## Functionalities
 
@@ -23,6 +26,9 @@ This PowerShell script provides a graphical user interface (GUI) to install, uni
 - **Create Shortcut**: Offers the option of creating a TeamViewer shortcut on the desktop.
 - **Assign ID**: Allows you to assign an ID to the TeamViewer installation.
 - **Custom Config ID**: Allows you to use a Custom Config ID to the TeamViewer installation.
+- **Device Alias**: Specify device name when assigning, otherwise the computer's hostname will be automatically entered.
+- **Enable Outlook Plugin**: Enable or Disable Outlook Plugin.
+- **Configuration File**: Allows you to use a .tvopt file to configure the installation.
 
 ## Requirements
 
@@ -81,9 +87,23 @@ This PowerShell script provides a graphical user interface (GUI) to install, uni
 2. Click on the **"Download and Install by Local File"** button.
 3. Then when you install it will use this custom config id to configure the installation.
 
+### Device Alias
+1. Enter the Device Alias in the **"Device Alias"** text field.
+2. Click on the **"Assign"** button.
+3. Then, your device will be assigned to the id you entered with the name you indicated in Device Alias, if it is blank, the hostname will be used
+
+### Enable Outlook Plugin
+1. Enable or Disable the checkbox
+2. Click on the **"Download and Install by Local File"** button.
+3. It depends on your status, it will enable or not enable the Outlook Plugin
+
+### Select Configuration File
+1. Select the .tvopt configuration file
+2. Click on the **"Download and Install by Local File"** button.
+3. This will configure TeamViewer with the settings specified in the file. 
 
 ## Example Image of the GUI
-![User Interface image](https://github.com/user-attachments/assets/20944c2d-4116-4ead-a17e-49422f5a8919)
+![User Interface image](https://github.com/user-attachments/assets/a92ed2db-340f-4c17-aebf-e92a947f8221)
 
 
 ## License
