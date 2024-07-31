@@ -74,6 +74,10 @@ This PowerShell script provides a graphical user interface (GUI) to install, uni
 2. Click on the **"Assign"** button.
 3. The script will assign the TeamViewer ID to the current installation.
 
+## Example Image of the GUI
+![User Interface image](https://github.com/user-attachments/assets/802444fe-1bd4-4e16-b29c-6c4f9b09f9ee)
+
+
 ## License
 
 This project is licensed under the MIT License. Consult the file [LICENSE](LICENSE) for more details.
