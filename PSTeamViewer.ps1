@@ -6,7 +6,7 @@ $localFilePath = ""
 
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "TeamViewer Installer"
-$form.Size = New-Object System.Drawing.Size(600, 400)
+$form.Size = New-Object System.Drawing.Size(600, 500) # Ajustar el tamaño para acomodar el nuevo campo
 $form.StartPosition = "CenterScreen"
 $form.BackColor = [System.Drawing.Color]::White
 $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
@@ -73,14 +73,26 @@ $assignmentIDBox.Size = New-Object System.Drawing.Size(200, 20)
 $assignmentIDBox.Location = New-Object System.Drawing.Point(150, 260)
 $form.Controls.Add($assignmentIDBox)
 
-$assignButton = New-Object System.Windows.Forms.Button
-$assignButton.Text = "Assign"
-$assignButton.BackColor = [System.Drawing.Color]::FromArgb(0, 122, 204)
-$assignButton.ForeColor = [System.Drawing.Color]::White
-$assignButton.FlatStyle = "Flat"
-$assignButton.Size = New-Object System.Drawing.Size(80, 30)
-$assignButton.Location = New-Object System.Drawing.Point(360, 260)
-$form.Controls.Add($assignButton)
+$assignmentButton = New-Object System.Windows.Forms.Button
+$assignmentButton.Text = "Assign"
+$assignmentButton.BackColor = [System.Drawing.Color]::FromArgb(0, 122, 204)
+$assignmentButton.ForeColor = [System.Drawing.Color]::White
+$assignmentButton.FlatStyle = "Flat"
+$assignmentButton.Size = New-Object System.Drawing.Size(80, 30)
+$assignmentButton.Location = New-Object System.Drawing.Point(360, 260)
+$form.Controls.Add($assignmentButton)
+
+# Ajustes en el campo CUSTOMCONFIG ID
+$customConfigLabel = New-Object System.Windows.Forms.Label
+$customConfigLabel.Text = "CustomConfig ID:"
+$customConfigLabel.AutoSize = $true
+$customConfigLabel.Location = New-Object System.Drawing.Point(50, 300)
+$form.Controls.Add($customConfigLabel)
+
+$customConfigIDBox = New-Object System.Windows.Forms.TextBox
+$customConfigIDBox.Size = New-Object System.Drawing.Size(200, 20)
+$customConfigIDBox.Location = New-Object System.Drawing.Point(150, 300)
+$form.Controls.Add($customConfigIDBox)
 
 function Show-InputBox {
     param (
@@ -133,6 +145,12 @@ function Install-TeamViewer {
         [string]$installerPath
     )
 
+    $customConfigID = $customConfigIDBox.Text
+    $additionalArgs = ""
+    if (![string]::IsNullOrWhiteSpace($customConfigID)) {
+        $additionalArgs = " CUSTOMCONFIGID=$customConfigID"
+    }
+
     $progressForm = New-Object System.Windows.Forms.Form
     $progressForm.Text = "Download and Install Progress"
     $progressForm.Size = New-Object System.Drawing.Size(400, 150)
@@ -159,9 +177,9 @@ function Install-TeamViewer {
 
     try {
         if ($installerPath -match "\.msi") {
-            Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$installerPath`" /qn ENABLEOUTLOOKPLUGIN=false ADDLOCAL=ALL REMOVE=f.DesktopShortcut" -Wait
+            Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$installerPath`" /qn ENABLEOUTLOOKPLUGIN=false ADDLOCAL=ALL REMOVE=f.DesktopShortcut$additionalArgs" -Wait
         } else {
-            Start-Process -FilePath $installerPath -ArgumentList "/S" -Wait
+            Start-Process -FilePath $installerPath -ArgumentList "/S$additionalArgs" -Wait
         }
 
         $desktopPath = "C:\Users\Public\Desktop\TeamViewer.lnk"
@@ -207,7 +225,7 @@ function Assign-TeamViewer {
             exit 1
         }
 
-        Start-Process -FilePath $teamViewerExecutable -ArgumentList "assignment --id $assignmentId" -NoNewWindow
+        Start-Process -FilePath $teamViewerExecutable -ArgumentList "assignment --id $assignmentID" -NoNewWindow
         [System.Windows.Forms.MessageBox]::Show("Assignment completed successfully.", "Assignment Complete", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
     } catch {
         [System.Windows.Forms.MessageBox]::Show("An error occurred during assignment: $_", "Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
@@ -265,52 +283,6 @@ function Uninstall-TeamViewer {
     }
 }
 
-function Show-InputBox {
-    param (
-        [string]$title,
-        [string]$prompt
-    )
-
-    $inputForm = New-Object System.Windows.Forms.Form
-    $inputForm.Text = $title
-    $inputForm.Size = New-Object System.Drawing.Size(400, 150)
-    $inputForm.StartPosition = "CenterScreen"
-    $inputForm.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
-    $inputForm.MaximizeBox = $false
-    $inputForm.ControlBox = $false
-
-    $label = New-Object System.Windows.Forms.Label
-    $label.Text = $prompt
-    $label.AutoSize = $true
-    $label.Location = New-Object System.Drawing.Point(20, 20)
-    $inputForm.Controls.Add($label)
-
-    $textBox = New-Object System.Windows.Forms.TextBox
-    $textBox.Size = New-Object System.Drawing.Size(350, 20)
-    $textBox.Location = New-Object System.Drawing.Point(20, 50)
-    $inputForm.Controls.Add($textBox)
-
-    $okButton = New-Object System.Windows.Forms.Button
-    $okButton.Text = "OK"
-    $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
-    $okButton.Location = New-Object System.Drawing.Point(250, 80)
-    $inputForm.Controls.Add($okButton)
-
-    $cancelButton = New-Object System.Windows.Forms.Button
-    $cancelButton.Text = "Cancel"
-    $cancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
-    $cancelButton.Location = New-Object System.Drawing.Point(330, 80)
-    $inputForm.Controls.Add($cancelButton)
-
-    $inputForm.AcceptButton = $okButton
-    $inputForm.CancelButton = $cancelButton
-
-    if ($inputForm.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
-        return $textBox.Text
-    }
-    return $null
-}
-
 $urlButton.Add_Click({
     $urlInput = Show-InputBox -title "Enter URL" -prompt "Enter the download URL:"
     if (![string]::IsNullOrWhiteSpace($urlInput)) {
@@ -341,7 +313,7 @@ $uninstallButton.Add_Click({
     Uninstall-TeamViewer
 })
 
-$assignButton.Add_Click({
+$assignmentButton.Add_Click({
     if (-not [string]::IsNullOrWhiteSpace($assignmentIDBox.Text)) {
         Assign-TeamViewer -assignmentID $assignmentIDBox.Text
     } else {
