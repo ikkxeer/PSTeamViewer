@@ -45,7 +45,7 @@ This PowerShell script provides a graphical user interface (GUI) to install, uni
 
 3. **Run the Script**
 
-    Open PowerShell with administrator privileges and navigate to the cloned repository folder:
+    Open PowerShell with **Administrator Privileges** and navigate to the cloned repository folder:
 
    ```powershell
     cd path/to/repository
@@ -105,6 +105,13 @@ This PowerShell script provides a graphical user interface (GUI) to install, uni
 ## Example Image of the GUI
 ![User Interface image](https://github.com/user-attachments/assets/a92ed2db-340f-4c17-aebf-e92a947f8221)
 
+## Common Issues
+
+- AccessDenied
+  - Execute the script with **Administrator Privileges**
+
+- .MSI File is not installing
+  - Make sure you have **Administrator Permissions** and that the .msi file is valid
 
 ## License
 
