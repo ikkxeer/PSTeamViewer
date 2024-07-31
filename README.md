@@ -113,6 +113,17 @@ This PowerShell script provides a graphical user interface (GUI) to install, uni
 - .MSI File is not installing
   - Make sure you have **Administrator Permissions** and that the .msi file is valid
 
+## Future improvements
+- [x] Device Alias assigning ✅
+- [ ] Install Security Key Redirection option
+- [ ] View path of .tvopt file when selected
+- [ ] Reassing optional with timeout
+- [ ] Assign Device while installing option
+- [ ] Export/Import Configuration
+- [ ] Final installation report
+- [ ] Remote Installation with parameters
+
+
 ## License
 
 This project is licensed under the MIT License. Consult the file [LICENSE](LICENSE) for more details.
