@@ -13,6 +13,7 @@ This PowerShell script provides a graphical user interface (GUI) to install, uni
 - Uninstall TeamViewer.
 - Create a shortcut on the desktop.
 - Assign a TeamViewer ID.
+- Custom Config ID
 
 ## Functionalities
 
@@ -21,6 +22,7 @@ This PowerShell script provides a graphical user interface (GUI) to install, uni
 - **Uninstall TeamViewer**: Remove TeamViewer and clean associated files and registry entries.
 - **Create Shortcut**: Offers the option of creating a TeamViewer shortcut on the desktop.
 - **Assign ID**: Allows you to assign an ID to the TeamViewer installation.
+- **Custom Config ID**: Allows you to use a Custom Config ID to the TeamViewer installation.
 
 ## Requirements
 
@@ -74,8 +76,14 @@ This PowerShell script provides a graphical user interface (GUI) to install, uni
 2. Click on the **"Assign"** button.
 3. The script will assign the TeamViewer ID to the current installation.
 
+### CustomConfig ID
+1. Enter the Custom Config ID in the **"CustomConfig ID"** text field.
+2. Click on the **"Download and Install by Local File"** button.
+3. Then when you install it will use this custom config id to configure the installation.
+
+
 ## Example Image of the GUI
-![User Interface image](https://github.com/user-attachments/assets/802444fe-1bd4-4e16-b29c-6c4f9b09f9ee)
+![User Interface image](https://github.com/user-attachments/assets/20944c2d-4116-4ead-a17e-49422f5a8919)
 
 
 ## License
