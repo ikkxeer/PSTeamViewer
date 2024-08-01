@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/5bc6d6ad-bedf-4405-946d-42e4454354a3" alt="PSCacheCleaner Logo" height="300" width="300">
+  <img src="https://github.com/user-attachments/assets/5bc6d6ad-bedf-4405-946d-42e4454354a3" alt="PSTeamViewer Logo" height="300" width="300">
 </div>
 <h1 align="center">PSTeamViewer</h1>
 PSTeamViewer provides a graphical interface to install, uninstall and configure TeamViewer on Windows. It allows installation from a URL, a local file, and facilitates the assignment of IDs and the creation of shortcuts.
